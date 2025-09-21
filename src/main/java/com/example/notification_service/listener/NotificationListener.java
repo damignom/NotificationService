@@ -1,6 +1,7 @@
 package com.example.notification_service.listener;
 
 import com.example.notification_service.service.EmailService;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,7 @@ public class NotificationListener {
         this.emailService = emailService;
     }
 
+    @KafkaListener(topics = "user-event", groupId = "notification-group")
     public void listen(String message) {
         // Сообщение формата "CREATE:user@example.com" или "DELETE:user@example.com"
         String[] parts = message.split(":");
