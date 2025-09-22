@@ -21,9 +21,9 @@ public class NotificationListener {
         String email = parts[1];
 
         if ("CREATE".equals(operation)) {
-            emailService.sendEmail(email, "Ваш аккаунт был создан.");
+            emailService.sendEmail(email, "Здравствуйте! Ваш аккаунт был успешно создан.");
         } else if ("DELETE".equals(operation)) {
-            emailService.sendEmail(email, "Ваш аккаунт был удалён.");
+            emailService.sendEmail(email, "Здравствуйте! Ваш аккаунт был удалён.");
         }
     }
 }
