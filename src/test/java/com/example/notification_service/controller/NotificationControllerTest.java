@@ -30,7 +30,7 @@ public class NotificationControllerTest {
                 .andExpect(status().isOk());
 
         verify(emailService).sendEmail("roma@gmail.com",
-                "Здравствуйте! Ваш аккаунт был успешно создан.");
+                "CREATE");
     }
 
     @Test
@@ -41,6 +41,6 @@ public class NotificationControllerTest {
                 .andExpect(status().isOk());
 
         verify(emailService).sendEmail("roma@gmail.com",
-                "Здравствуйте! Ваш аккаунт был удалён.");
+                "DELETE");
     }
 }
