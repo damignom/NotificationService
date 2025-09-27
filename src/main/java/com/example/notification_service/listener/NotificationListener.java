@@ -1,29 +1,35 @@
 package com.example.notification_service.listener;
 
 import com.example.notification_service.service.EmailService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class NotificationListener {
 
     private final EmailService emailService;
 
-    public NotificationListener(EmailService emailService) {
-        this.emailService = emailService;
-    }
-
     @KafkaListener(topics = "user-event", groupId = "notification-group")
     public void listen(String message) {
-        // Сообщение формата "CREATE:user@example.com" или "DELETE:user@example.com"
-        String[] parts = message.split(":");
-        String operation = parts[0];
-        String email = parts[1];
+        log.info("Получено сообщение из Kafka: {}", message);
 
-        if ("CREATE".equals(operation)) {
-            emailService.sendEmail(email, "Здравствуйте! Ваш аккаунт был успешно создан.");
-        } else if ("DELETE".equals(operation)) {
-            emailService.sendEmail(email, "Здравствуйте! Ваш аккаунт был удалён.");
+        String[] parts = message.split(":");
+        if (parts.length != 2) {
+            log.error("Неверный формат сообщения: {}", message);
+            return;
+        }
+
+        String operation = parts[0].trim();
+        String email = parts[1].trim();
+
+        try {
+            emailService.sendEmail(email, operation);
+        } catch (IllegalArgumentException e) {
+            log.error("Ошибка обработки сообщения: {}", e.getMessage());
         }
     }
 }
